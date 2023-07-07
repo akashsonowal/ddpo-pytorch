@@ -19,7 +19,7 @@ class MLP(nn.Module):
         )
     
     def __repr__(self):
-        return """This is the aesthetic model based on Based on https://github.com/christophschuhmann/improved-aesthetic-predictor/blob/fe88a163f4661b4ddabba0751ff645e2e620746e/simple_inference.py."""
+        return """This is the aesthetic model based on https://github.com/christophschuhmann/improved-aesthetic-predictor/blob/fe88a163f4661b4ddabba0751ff645e2e620746e/simple_inference.py."""
     
     def forward(self, x):
         return self.layers(x)
