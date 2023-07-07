@@ -6,10 +6,10 @@ def sd_sample(prompts, pipe, height, width, guidance_scale, num_inference_steps,
     scheduler = pipe.scheduler
     unet = pipe.unet
 
-    text_embeddings = pipe._encode_prompt(prompts, device, 1, do_classifier_free_guidance=guidance_scale > 1.0) # (8, 77, 768)
+    text_embeddings = pipe._encode_prompt(prompts, device, 1, do_classifier_free_guidance=guidance_scale > 1.0) # (8, 77, 768) The 8 is because of duplication
 
     scheduler.set_timesteps(num_inference_steps, device=device) # change 1000 to 50
-    latents = torch.randn((len(prompts), unet.in_channels, height//8, width//8)).to(device)
+    latents = torch.randn((len(prompts), unet.in_channels, height//8, width//8)).to(device) # (4, 4, 64, 64)
 
     all_step_preds, log_probs = [latents], []
 
