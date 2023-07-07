@@ -17,7 +17,7 @@ class MLP(nn.Module):
         )
     
     def __repr__(self):
-        return """xcol is emb and ycol is avg_rating."""
+        return """This is the aesthetic model."""
     
     def forward(self, x):
         return self.layers(x)
