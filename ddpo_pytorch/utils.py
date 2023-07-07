@@ -15,8 +15,8 @@ def sd_sample(prompts, pipe, height, width, guidance_scale, num_inference_steps,
 
 
     for i, t in enumerate(progress_bar(scheduler.timesteps)):
-        input = torch.cat([latents] * 2)
-        input = scheduler.scale_model_input(input, t)
+        input = torch.cat([latents] * 2) # (8, 4, 64, 64)
+        input = scheduler.scale_model_input(input, t) # (8, 4, 64, 64)
 
         # predict the noise residual
         pred = unet(input, t, encoder_hidden_states=text_embeddings).sample
