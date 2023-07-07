@@ -24,7 +24,7 @@ class MLP(nn.Module):
     def forward(self, x):
         return self.layers(x)
 
-def load_aesthetic_model_weights(cache="."):
+def load_aesthetic_model(cache="."):
     weights_fname = "sac+logos+ava1-l14-linearMSE.pth"
     loadpath = os.path.join(cache, weights_fname)
 
@@ -39,7 +39,10 @@ def load_aesthetic_model_weights(cache="."):
             f.write(r.content)
     
     weights = torch.load(loadpath, map_location=torch.device("cpu"))
-    return weights
+    aesthetic_model = MLP(768)
+    aesthetic_model.load_state_dict(weights)
+
+    return aesthetic_model
 
 def aesthetic_model_normalize(a, axis=-1, order=2):
     l2 = np.atleast_1d(np.linalg.norm(a, order, axis)) # calculate l2 norms of each row
