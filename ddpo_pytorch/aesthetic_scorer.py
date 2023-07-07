@@ -40,7 +40,9 @@ def load_aesthetic_model_weights(cache="."):
     return weights
 
 def aesthetic_model_normalize(a, axis=-1, order=2):
-    l2 = np.atleast_1d(np.linalg.norm(a, order, axis)) # calculate norms of each row
+    l2 = np.atleast_1d(np.linalg.norm(a, order, axis)) # calculate l2 norms of each row
     l2[l2 == 0] = 1 # setting 0 norms as 1
     return a / np.expand_dims(l2, axis) # transpose
+
+def aesthetic_scoring(imgs, preprocess, clip_model, aesthetic_model_normalize, aesthetic_model)
 
