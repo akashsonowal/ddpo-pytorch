@@ -47,6 +47,13 @@ def aesthetic_model_normalize(a, axis=-1, order=2):
     return a / np.expand_dims(l2, axis) # transpose
 
 def aesthetic_scoring(imgs, preprocess, clip_model, aesthetic_model_normalize, aesthetic_model):
-    preprocessed_imgs = torch.stack([preprocess(Image.fromarray(img)).cuda() for img in imgs])
+    imgs = torch.stack([preprocess(Image.fromarray(img)).cuda() for img in imgs])
+
+    with torch.no_grad():
+        image_features = clip_model.encode(imgs)
     
+    im_emb_arr = aesthetic_model_normalize(image_features.cpu().detach().numpy())
+    prediction = aesthetic_model(torch.from_numpy(im_emb_arr).float().cuda())
+
+    return prediction
 
