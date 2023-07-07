@@ -61,4 +61,3 @@ def aesthetic_scoring(imgs, preprocess, clip_model, aesthetic_model_normalize, a
     prediction = aesthetic_model(torch.from_numpy(im_emb_arr).float().cuda()) # (4, 1)
 
     return prediction
-
