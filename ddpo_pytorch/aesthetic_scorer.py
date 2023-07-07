@@ -1,6 +1,6 @@
 import torch
 from torch import nn
-import clip
+import requests
 
 class MLP(nn.Module):
     def __init__(self, input_size):
@@ -17,7 +17,26 @@ class MLP(nn.Module):
         )
     
     def __repr__(self):
-        return """This is the aesthetic model."""
+        return """This is the aesthetic model based on Based on https://github.com/christophschuhmann/improved-aesthetic-predictor/blob/fe88a163f4661b4ddabba0751ff645e2e620746e/simple_inference.py."""
     
     def forward(self, x):
         return self.layers(x)
+
+def load_aesthetic_model_weights(cache="."):
+    weights_fname = "sac+logos+ava1-l14-linearMSE.pth"
+    loadpath = os.path.join(cache, weights_fname)
+
+    if not os.path.exists(loadpath):
+        url = {
+            "https://github.com/christophschuhmann/"
+            f"improved-aesthetic-predictor/blob/main/{weights_fname}?raw=true"
+        }
+        r = requests.get(url)
+
+        with open(loadpath, "wb") as f:
+            f.write(r.content)
+    
+    weights = torch.load(loadpath, map_location=torch.device("cpu"))
+    return weights
+
+
