@@ -48,7 +48,8 @@ def aesthetic_model_normalize(a, axis=-1, order=2):
 
 def aesthetic_scoring(imgs, preprocess, clip_model, aesthetic_model_normalize, aesthetic_model):
     """
-    imgs: (4, 512, 512, 3)
+    input imgs: (4, 512, 512, 3) for batch size of 4
+    returns: (4, 1)
     """
     imgs = torch.stack([preprocess(Image.fromarray(img)).cuda() for img in imgs]) # (4, 3, 224, 224)
 
@@ -58,6 +59,6 @@ def aesthetic_scoring(imgs, preprocess, clip_model, aesthetic_model_normalize, a
     im_emb_arr = aesthetic_model_normalize(image_features.cpu().detach().numpy()) # (4, 768)
 
     prediction = aesthetic_model(torch.from_numpy(im_emb_arr).float().cuda()) # (4, 1)
-    
+
     return prediction
 
