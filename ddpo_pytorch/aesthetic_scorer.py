@@ -2,6 +2,8 @@ import torch
 from torch import nn
 import requests
 
+from PIL import Image
+
 class MLP(nn.Module):
     def __init__(self, input_size):
         self.input_size = input_size
@@ -44,5 +46,7 @@ def aesthetic_model_normalize(a, axis=-1, order=2):
     l2[l2 == 0] = 1 # setting 0 norms as 1
     return a / np.expand_dims(l2, axis) # transpose
 
-def aesthetic_scoring(imgs, preprocess, clip_model, aesthetic_model_normalize, aesthetic_model)
+def aesthetic_scoring(imgs, preprocess, clip_model, aesthetic_model_normalize, aesthetic_model):
+    preprocessed_imgs = torch.stack([preprocess(Image.fromarray(img)).cuda() for img in imgs])
+    
 
