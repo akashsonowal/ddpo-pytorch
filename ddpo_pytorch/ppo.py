@@ -1,6 +1,10 @@
 import torch 
 
 def compute_loss(x_t, original_log_probs, advantages, clip_advantages, clip_ratio, prompts, pipe, num_inference_steps, guidance_scale, eta, device):
+    """
+    clip advantages: 10.0
+    clip ratio: 1e-4
+    """
     scheduler = pipe.scheduler
     unet = pipe.unet
     text_embeddings = pipe._encode_prompt(prompts,device, 1, do_classifier_free_guidance=guidance_scale > 1.0).detach()
@@ -39,5 +43,5 @@ def compute_loss(x_t, original_log_probs, advantages, clip_advantages, clip_rati
         loss.backward() 
 
         loss_value += loss.item()
-        
+
     return loss_value
