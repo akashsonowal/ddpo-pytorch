@@ -39,4 +39,8 @@ def load_aesthetic_model_weights(cache="."):
     weights = torch.load(loadpath, map_location=torch.device("cpu"))
     return weights
 
+def aesthetic_model_normalize(a, axis=-1, order=2):
+    l2 = np.atleast_1d(np.linalg.norm(a, order, axis)) # calculate norms of each row
+    l2[l2 == 0] = 1 # setting 0 norms as 1
+    return a / np.expand_dims(l2, axis) # transpose
 
