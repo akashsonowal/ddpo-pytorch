@@ -56,7 +56,7 @@ class PerPromptStatTracker:
     def update(self, prompts, rewards):
         unique = np.unique(prompts)
         advantages = np.empty_like(rewards)
-        
+
         for prompt in unique:
             prompt_rewards = rewards[prompts == prompt]
             if prompt not in self.stats:
@@ -69,6 +69,6 @@ class PerPromptStatTracker:
             else:
                 mean = np.mean(self.stats[prompt])
                 std = np.std(self.stats[prompt]) + 1e-6
-            advantages[prompts == prompt] = (prompt_rewards - mean) / std
+            advantages[prompts == prompt] = (prompt_rewards - mean) / std # advantage is normalized rewards
 
         return advantages
