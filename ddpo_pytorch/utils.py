@@ -1,0 +1,1 @@
+def load_aesthetic_model_weights()
