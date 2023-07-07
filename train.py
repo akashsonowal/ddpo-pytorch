@@ -1,4 +1,5 @@
 
+from ddpo_pytorch.aesthetic_scorer import aesthetic_scoring
 
 aesthetic_model = MLP(768)
 aesthetic_model.load_state_dict(weights)
