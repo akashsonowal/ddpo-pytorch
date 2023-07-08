@@ -7,6 +7,7 @@ from diffusers import StableDiffusionPipeline, DDIMScheduler
 import clip 
 import requests
 from fastprogress import progress_bar, master_bar
+import numpy as np
 
 from ddpo_pytorch.aesthetic_scorer import MLP, load_aesthetic_model_weights
 from ddpo_pytorch.prompts import PromptDataset, imagenet_animal_prompts
@@ -122,6 +123,7 @@ def main(args):
         #  sampling `num_samples_per_epoch` images and calculating rewards
         for i, prompts in enumerate(progress_bar(train_dl)):
             batch_imgs, rewards, batch_all_step_preds, batch_log_probs = sample_and_calculate_rewards(prompts, pipe, args.img_size, args.cfg, args.num_timesteps, decoding_fn, reward_fn, 'cuda'))
+            batch_advantages = torch.from_numpy(per_prompt_stat_tracker.update(np.array(prompts), rewards.squeeze().cpu().detach().numpy())).float().to('cuda')
 
 
 
