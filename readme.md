@@ -25,5 +25,5 @@ To save memory (you'll likely need it), use the arguments `--enable_attention_sl
 Original samples:
 ![image](https://github.com/tmabraham/ddpo-pytorch/assets/37097934/6a9489a2-9cfb-4e21-84c5-eaa2694acbd4)
 
-After training for 50 epochs:
+After training for 50 episodes:
 ![image](https://github.com/tmabraham/ddpo-pytorch/assets/37097934/a82ce5ce-2e29-4adf-b06c-601295be288d)
