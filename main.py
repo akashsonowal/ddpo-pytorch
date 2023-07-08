@@ -36,21 +36,21 @@ def get_args_parser():
     parser.add_argument(
         "--num_samples_per_episode", type=int, default=4
     )  # samples per episode 128
-    parser.add_argument("--num_episodes", type=int, default=1)  # num_episodes 50
+    parser.add_argument("--num_episodes", type=int, default=50) 
     parser.add_argument(
-        "--sample_episode_batch_size", type=int, default=4
-    )  # sample batch size 32
-    parser.add_argument("--num_timesteps", type=int, default=4) # 50
-    parser.add_argument("--num_epochs", type=int, default=1)  # epochs
-    parser.add_argument("--batch_size", type=int, default=2)  # batch size 4
+        "--sample_episode_batch_size", type=int, default=32
+    )  
+    parser.add_argument("--num_timesteps", type=int, default=50) 
+    parser.add_argument("--num_epochs", type=int, default=1)  
+    parser.add_argument("--batch_size", type=int, default=4) 
     parser.add_argument("--img_size", type=int, default=512)
     parser.add_argument("--lr", type=float, default=5e-6)
     parser.add_argument("--weight_decay", type=float, default=1e-4)
     parser.add_argument("--clip_advantages", type=float, default=10.0)
     parser.add_argument("--clip_ratio", type=float, default=1e-4)
     parser.add_argument("--cfg", type=float, default=5.0)
-    parser.add_argument("--buffer_size", type=int, default=4)  # buffer size 32
-    parser.add_argument("--min_count", type=int, default=2)  # min count 16
+    parser.add_argument("--buffer_size", type=int, default=32)  
+    parser.add_argument("--min_count", type=int, default=16) 
     parser.add_argument("--wandb_project", type=str, default="DDPO")
     parser.add_argument("--gpu", type=int, default=0)
     parser.add_argument("--output_dir", type=str, default="ddpo_model")
