@@ -72,3 +72,11 @@ class PerPromptStatTracker:
             advantages[prompts == prompt] = (prompt_rewards - mean) / std # advantage is normalized rewards
 
         return advantages
+
+@torch.no_grad()
+def decoding_fn(latents, pipe):
+    images = pipe.vae.decode(1 / 0.18215 * latents.cuda()).sample # (4, 3, 512, 512)
+    images = (images / 2 + 0.5).clamp(0, 1)
+    images = images.detach().cpu().permute(0, 2, 3, 1).numpy() # (4, 512, 512, 3)
+    images = (images * 255).round().astype("uint8")
+    return images 
