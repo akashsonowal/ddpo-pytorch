@@ -1,5 +1,6 @@
 import os
 import requests
+import numpy as np
 import torch
 from torch import nn
 from PIL import Image
