@@ -124,7 +124,13 @@ def main(args):
         for i, prompts in enumerate(progress_bar(train_dl)):
             batch_imgs, rewards, batch_all_step_preds, batch_log_probs = sample_and_calculate_rewards(prompts, pipe, args.img_size, args.cfg, args.num_timesteps, decoding_fn, reward_fn, 'cuda'))
             batch_advantages = torch.from_numpy(per_prompt_stat_tracker.update(np.array(prompts), rewards.squeeze().cpu().detach().numpy())).float().to('cuda')
+            
+            all_step_preds.append(batch_all_step_preds)
+            log_probs.append(batch_log_probs)
+            advantages.append(batch_advantages)
 
+            all_prompts += prompts
+            all_rewards.append(rewards)
 
 
 
