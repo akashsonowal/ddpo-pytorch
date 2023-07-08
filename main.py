@@ -28,12 +28,12 @@ def get_args_parser():
         "--enable_xformers_memory_efficient_attention", action="store_true"
     )
     parser.add_argument("--enable_grad_checkpointing", action="store_true")
-    parser.add_argument("--num_samples_per_epoch", type=int, default=2) # samples per episode 128
+    parser.add_argument("--num_samples_per_epoch", type=int, default=1) # samples per episode 128
     parser.add_argument("--num_epochs", type=int, default=1) # num_episodes 50
     parser.add_argument("--num_inner_epochs", type=int, default=1) # epochs
     parser.add_argument("--num_timesteps", type=int, default=50)
     parser.add_argument("--batch_size", type=int, default=1) # batch size 4
-    parser.add_argument("--sample_batch_size", type=int, default=2) # sample batch size 32
+    parser.add_argument("--sample_batch_size", type=int, default=1) # sample batch size 32
     parser.add_argument("--img_size", type=int, default=512)
     parser.add_argument("--lr", type=float, default=5e-6)
     parser.add_argument("--weight_decay", type=float, default=1e-4)
