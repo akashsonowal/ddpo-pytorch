@@ -200,7 +200,7 @@ def main(args):
             args, all_prompts, all_step_preds, all_log_probs, all_advantages, pipe, optimizer
         )
 
-    # save the finetuned model
+    # save the RLHF finetuned model
     pipe.save_pretrained(args.output_dir)
     wandb.finish()
 
