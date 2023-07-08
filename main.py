@@ -23,7 +23,7 @@ torch.backends.cuda.matmul.allow_tf32 = True
 def get_args_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--model", type=str, help="model name", default="CompVis/stable-diffusion-v1-4"
+        "--sd_model", type=str, help="model name", default="CompVis/stable-diffusion-v1-4"
     )
     parser.add_argument("--enable_attention_slicing", action="store_true")
     parser.add_argument(
@@ -31,10 +31,10 @@ def get_args_parser():
     )
     parser.add_argument("--enable_grad_checkpointing", action="store_true")
     parser.add_argument(
-        "--num_samples_per_epoch", type=int, default=1
+        "--num_samples_per_episode", type=int, default=4
     )  # samples per episode 128
-    parser.add_argument("--num_epochs", type=int, default=1)  # num_episodes 50
-    parser.add_argument("--num_inner_epochs", type=int, default=1)  # epochs
+    parser.add_argument("--num_episodes", type=int, default=1)  # num_episodes 50
+    parser.add_argument("--num_epochs", type=int, default=1)  # epochs
     parser.add_argument("--num_timesteps", type=int, default=50)
     parser.add_argument("--batch_size", type=int, default=1)  # batch size 4
     parser.add_argument(
