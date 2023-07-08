@@ -1,5 +1,9 @@
-
+import os
+import argparse
+import requests
+from pathlib import Path 
 import clip 
+
 from ddpo_pytorch.aesthetic_scorer import aesthetic_scoring
 
 # setup reward model
