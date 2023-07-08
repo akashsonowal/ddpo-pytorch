@@ -7,7 +7,6 @@ from diffusers import StableDiffusionPipeline, DDIMScheduler
 import clip 
 import requests
 
-
 from ddpo_pytorch.aesthetic_scorer import MLP, load_aesthetic_model_weights
 from ddpo_pytorch.prompts import PromptDataset, imagenet_animal_prompts
 
@@ -91,8 +90,9 @@ def main(args):
     imagenet_classes = list(synsets.values()) # total 1000 classes
 
     train_set = PromptDataset(imagenet_animal_prompts, args.num_samples_per_epoch)
-    train_dl = 
+    train_dl = torch.utils.data.DataLoader(train_set, batch_size=args.sample_batch_size, shuffle=True, num_workers=0)
 
+  
     def reward_fn(imgs, device):
         clip_model.to(device)
         aesthetic_model.to(device)
