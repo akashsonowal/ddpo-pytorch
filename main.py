@@ -85,7 +85,20 @@ def main(args):
         f.write(r.content)
     
     synsets = {k:v for k,v in [o.split(',')[0].split(' ', maxsplit=1) for o in Path('LOC_synset_mapping.txt').read_text().splitlines()]}
-    imagenet_classes = list(synsets.values())
+    imagenet_classes = list(synsets.values()) # total 1000 classes
+
+    def reward_fn(imgs, device):
+        clip_model.to(device)
+        aesthetic_model.to(device)
+
+        rewards = aesthetic_scoring(imgs, preprocess, clip_model, aesthetic_model_normalize, aesthetic_model)
+
+        clip_model.to("cpu")
+        aesthetic_model.to("cpu")
+        return rewards
+    
+    
+
 
 if __name__ == "__main__":
     args = get_args_parser()
