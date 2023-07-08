@@ -51,7 +51,7 @@ def main(args):
             "num_samples_per_epoch": args.num_samples_per_epoch,
             "num_epochs": args.num_epochs,
             "num_inner_epochs": args.num_inner_epochs,
-            "num_time_steps": args.num_time_steps,
+            "num_time_steps": args.num_timesteps,
             "batch_size": args.batch_size,
             "lr": args.lr
         }
