@@ -40,7 +40,7 @@ def get_args_parser():
     parser.add_argument(
         "--sample_episode_batch_size", type=int, default=4
     )  # sample batch size 32
-    parser.add_argument("--num_timesteps", type=int, default=5) # 50
+    parser.add_argument("--num_timesteps", type=int, default=4) # 50
     parser.add_argument("--num_epochs", type=int, default=1)  # epochs
     parser.add_argument("--batch_size", type=int, default=2)  # batch size 4
     parser.add_argument("--img_size", type=int, default=512)
