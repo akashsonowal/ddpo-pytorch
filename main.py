@@ -9,7 +9,7 @@ import requests
 
 
 from ddpo_pytorch.aesthetic_scorer import MLP, load_aesthetic_model_weights
-from ddpo_pytorch.prompts import PromptDataset
+from ddpo_pytorch.prompts import PromptDataset, imagenet_animal_prompts
 
 torch.backends.cuda.matmal.allow_tf32 = True
 
@@ -90,7 +90,7 @@ def main(args):
     synsets = {k:v for k,v in [o.split(',')[0].split(' ', maxsplit=1) for o in Path('LOC_synset_mapping.txt').read_text().splitlines()]}
     imagenet_classes = list(synsets.values()) # total 1000 classes
 
-    train_set = PromptDataset(imagenet_animal_prompts)
+    train_set = PromptDataset(imagenet_animal_prompts, args.num_samples_per_epoch)
     train_dl = 
 
     def reward_fn(imgs, device):
