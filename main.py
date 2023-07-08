@@ -15,7 +15,7 @@ from ddpo_pytorch.aesthetic_scorer import (
 )
 from ddpo_pytorch.prompts import PromptDataset, imagenet_animal_prompts
 from ddpo_pytorch.utils import PerPromptStatTracker, decoding_fn
-from ddpo_pytorch.trainer import sample_and_calculate_rewards, train_one_epoch
+from ddpo_pytorch.trainer import sample_and_calculate_rewards, train_one_episode
 
 torch.backends.cuda.matmul.allow_tf32 = True
 
@@ -195,8 +195,8 @@ def main(args):
         wandb.log({"mean_reward": mean_rewards[-1]})
         wandb.log({"reward_hist": wandb.Histogram(all_rewards.detach().cpu().numpy())})
 
-        # train one epoch
-        train_one_epoch(
+        # model training in a episode
+        train_one_episode(
             args, all_prompts, all_step_preds, log_probs, advantages, pipe, optimizer
         )
 
