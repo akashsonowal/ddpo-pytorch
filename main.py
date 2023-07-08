@@ -8,6 +8,7 @@ import clip
 import requests
 from fastprogress import progress_bar, master_bar
 import numpy as np
+from PIL import Image
 
 from ddpo_pytorch.aesthetic_scorer import MLP, load_aesthetic_model_weights
 from ddpo_pytorch.prompts import PromptDataset, imagenet_animal_prompts
@@ -124,7 +125,8 @@ def main(args):
         for i, prompts in enumerate(progress_bar(train_dl)):
             batch_imgs, rewards, batch_all_step_preds, batch_log_probs = sample_and_calculate_rewards(prompts, pipe, args.img_size, args.cfg, args.num_timesteps, decoding_fn, reward_fn, 'cuda'))
             batch_advantages = torch.from_numpy(per_prompt_stat_tracker.update(np.array(prompts), rewards.squeeze().cpu().detach().numpy())).float().to('cuda')
-            
+            wandb.log({"img batch": [wandb.Image(Image.fromarray(img), caption=prompt) for img, prompt in zip(batch_imgs, prompts)]})
+
             all_step_preds.append(batch_all_step_preds)
             log_probs.append(batch_log_probs)
             advantages.append(batch_advantages)
@@ -137,6 +139,13 @@ def main(args):
         all_rewards = torch.cat(all_rewards)
 
         mean_rewards.append(all_rewards.mean().item())
+
+        wandb.log({"mean_reward": mean_rewards[-1]})
+        wandb.log({"reward_hist": wandb.Histogram(all_rewards.detach().cpu().numpy())})
+
+        # train one epoch
+        
+       
 
 
 
