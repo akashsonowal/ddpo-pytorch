@@ -40,6 +40,6 @@ class PromptDataset(torch.utils.data.Dataset):
 
 def imagenet_animal_prompts():
     imagenet_classes = get_prompts()
-    animal = random.choice(imagenet_classes[:397])
-    prompts = f"{animal}"
+    animals = random.choice(imagenet_classes[:397])
+    prompts = f"{animals}"
     return prompts
