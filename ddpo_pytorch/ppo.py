@@ -1,4 +1,6 @@
 import torch 
+from fastprogress import progress_bar
+
 from .utils import calculate_log_probs
 
 def compute_loss(x_t, original_log_probs, advantages, clip_advantages, clip_ratio, prompts, pipe, num_inference_steps, guidance_scale, eta, device):
