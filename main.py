@@ -6,6 +6,7 @@ from diffusers import StableDiffusionPipeline, DDIMScheduler
 
 import clip 
 import requests
+from fastprogress import progress_bar, master_bar
 
 from ddpo_pytorch.aesthetic_scorer import MLP, load_aesthetic_model_weights
 from ddpo_pytorch.prompts import PromptDataset, imagenet_animal_prompts
@@ -109,7 +110,17 @@ def main(args):
         aesthetic_model.to("cpu")
         return rewards
     
+     
     
+    mean_rewards = [] 
+
+    # start training
+    for epoch in master_bar(range(args.num_epochs)):
+        print(f"Epoch {epoch}")
+        all_step_preds, log_probs, advantages, all_prompts, all_rewards = [], [], [], [], []
+
+
+
 
 
 
