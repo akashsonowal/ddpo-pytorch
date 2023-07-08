@@ -1,6 +1,6 @@
 # RLHF for Diffusion Models
 
-Citing: This codebase is clone of [work by Tanishq Abraham](https://github.com/tmabraham/ddpo-pytorch/tree/main). I have cloned for my own learning purpose but it may be useful if you are looking for little more organized code than the original repo. I have tried to keep the notation little more beginner friendly.
+Citing: This codebase is clone of [work by Tanishq Abraham](https://github.com/tmabraham/ddpo-pytorch/tree/main). I have cloned for my own learning purpose but it may be useful if you are looking for little more organized code (modular and intuitive variable namings) than the original repo.
 
 This is an implementation of [Training Diffusion Models with Reinforcement Learning](https://arxiv.org/abs/2305.13301) with only basic features. It currently only implements [LAION aesthetic classifier](https://github.com/LAION-AI/aesthetic-predictor) as a reward function.
 
