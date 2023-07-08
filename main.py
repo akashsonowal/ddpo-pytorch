@@ -28,7 +28,7 @@ def get_args_parser():
         "--enable_xformers_memory_efficient_attention", action="store_true"
     )
     parser.add_argument("--enable_grad_checkpointing", action="store_true")
-    parser.add_argument("--num_samples_per_epoch", type=int, default=32) # samples per episode 128
+    parser.add_argument("--num_samples_per_epoch", type=int, default=8) # samples per episode 128
     parser.add_argument("--num_epochs", type=int, default=1) # num_episodes 50
     parser.add_argument("--num_inner_epochs", type=int, default=1) # epochs
     parser.add_argument("--num_timesteps", type=int, default=50)
