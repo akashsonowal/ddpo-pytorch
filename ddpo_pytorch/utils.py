@@ -1,6 +1,7 @@
 import math 
 import numpy as np
 import torch 
+from collections import deque
 from fastprogress import progress_bar
 
 def calculate_log_probs(prev_sample, prev_sample_mean, std_dev_t):
