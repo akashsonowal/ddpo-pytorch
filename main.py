@@ -34,20 +34,20 @@ def get_args_parser():
         "--num_samples_per_episode", type=int, default=4
     )  # samples per episode 128
     parser.add_argument("--num_episodes", type=int, default=1)  # num_episodes 50
-    parser.add_argument("--num_epochs", type=int, default=1)  # epochs
-    parser.add_argument("--num_timesteps", type=int, default=50)
-    parser.add_argument("--batch_size", type=int, default=1)  # batch size 4
     parser.add_argument(
-        "--sample_batch_size", type=int, default=1
+        "--sample_episode_batch_size", type=int, default=4
     )  # sample batch size 32
+    parser.add_argument("--num_timesteps", type=int, default=50)
+    parser.add_argument("--num_epochs", type=int, default=1)  # epochs
+    parser.add_argument("--batch_size", type=int, default=2)  # batch size 4
     parser.add_argument("--img_size", type=int, default=512)
     parser.add_argument("--lr", type=float, default=5e-6)
     parser.add_argument("--weight_decay", type=float, default=1e-4)
     parser.add_argument("--clip_advantages", type=float, default=10.0)
     parser.add_argument("--clip_ratio", type=float, default=1e-4)
     parser.add_argument("--cfg", type=float, default=5.0)
-    parser.add_argument("--buffer_size", type=int, default=16)  # buffer size 32
-    parser.add_argument("--min_count", type=int, default=8)  # min count 16
+    parser.add_argument("--buffer_size", type=int, default=4)  # buffer size 32
+    parser.add_argument("--min_count", type=int, default=2)  # min count 16
     parser.add_argument("--wandb_project", type=str, default="DDPO")
     parser.add_argument("--gpu", type=int, default=0)
     parser.add_argument("--output_dir", type=str, default="ddpo_model")
@@ -60,16 +60,16 @@ def main(args):
     wandb.init(
         project=args.wandb_project,
         config={
-            "num_samples_per_epoch": args.num_samples_per_epoch,
+            "num_samples_per_epoch": args.num_samples_per_episode,
+            "num_episodes": args.num_episodes,
             "num_epochs": args.num_epochs,
-            "num_inner_epochs": args.num_inner_epochs,
             "num_time_steps": args.num_timesteps,
             "batch_size": args.batch_size,
             "lr": args.lr,
         },
     )
 
-    pipe = StableDiffusionPipeline.from_pretrained(args.model).to("cuda")
+    pipe = StableDiffusionPipeline.from_pretrained(args.sd_model).to("cuda")
 
     if args.enable_attention_slicing:
         pipe.enable_attention_slicing()
