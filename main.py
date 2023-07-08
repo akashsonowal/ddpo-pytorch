@@ -15,7 +15,7 @@ from ddpo_pytorch.prompts import PromptDataset, imagenet_animal_prompts
 from ddpo_pytorch.utils import PerPromptStatTracker, decoding_fn
 from ddpo_pytorch.trainer import sample_and_calculate_rewards, train_one_epoch
 
-torch.backends.cuda.matmal.allow_tf32 = True
+torch.backends.cuda.matmul.allow_tf32 = True
 
 def get_args_parser():
     parser = argparse.ArgumentParser()
