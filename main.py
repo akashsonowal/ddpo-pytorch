@@ -144,13 +144,10 @@ def main(args):
         wandb.log({"reward_hist": wandb.Histogram(all_rewards.detach().cpu().numpy())})
 
         # train one epoch
-
-       
-
-
-
-
-
+        train_one_epoch(args, all_prompts, all_step_preds, log_probs, advantages, optimizer)
+        
+        pipe.save_pretrained(args.output_dir)
+        wandb.finish()
 
 if __name__ == "__main__":
     args = get_args_parser()
