@@ -1,4 +1,5 @@
 import argparse 
+import wandb
 import random
 from pathlib import Path 
 
@@ -30,6 +31,9 @@ def get_args_parser():
     parser.add_argument("--gpu", type=int, default=0)
     parser.add_argument("--output_dir", type=str, default="ddpo_model")
     return parser.parse_args()
+
+def main(args):
+    torch.cuda.set_device(args.gpu)
 
 if __name__ == "__main__":
     args = get_args_parser()
