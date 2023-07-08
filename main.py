@@ -97,22 +97,7 @@ def main(args):
     aesthetic_model.cuda()
 
     # setup environment
-    r = requests.get(
-        "https://raw.githubusercontent.com/formigone/tf-imagenet/master/LOC_synset_mapping.txt"
-    )
-    with open("LOC_synset_mapping.txt", "wb") as f:
-        f.write(r.content)
-
-    synsets = {
-        k: v
-        for k, v in [
-            o.split(",")[0].split(" ", maxsplit=1)
-            for o in Path("LOC_synset_mapping.txt").read_text().splitlines()
-        ]
-    }
-    imagenet_classes = list(synsets.values())  # total 1000 classes
-
-    train_set = PromptDataset(imagenet_animal_prompts(imagenet_classes), args.num_samples_per_epoch)
+    train_set = PromptDataset(imagenet_animal_prompts, args.num_samples_per_epoch)
     train_dl = torch.utils.data.DataLoader(
         train_set, batch_size=args.sample_batch_size, shuffle=True, num_workers=0
     )
