@@ -2,10 +2,6 @@ import os
 import argparse
 import requests
 from pathlib import Path 
-import clip 
-
-
-
 
 
 def reward_fn(imgs, device):
