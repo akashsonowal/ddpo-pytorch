@@ -4,6 +4,9 @@ import wandb
 import torch 
 from diffusers import StableDiffusionPipeline, DDIMScheduler
 
+import clip 
+from ddpo_pytorch.aesthetic_scorer import MLP, load_aesthetic_model_weights
+
 torch.backends.cuda.matmal.allow_tf32 = True
 
 def get_args_parser():
@@ -68,6 +71,12 @@ def main(args):
         steps_offset=pipe.scheduler.steps_offset,
         prediction_type=pipe.scheduler.prediction_type
     )
+
+    # setup reward model
+    clip_model, preprocess = clip.load("ViT-L/14", device="cuda")
+    aesthetic_model = MLP(768)
+    aesthetic_model.load_state_dict(load_aesthetic_model_weights())
+    aesthetic_model.cuda()
 
 if __name__ == "__main__":
     args = get_args_parser()
