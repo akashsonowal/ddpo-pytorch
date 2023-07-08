@@ -13,7 +13,7 @@ from PIL import Image
 from ddpo_pytorch.aesthetic_scorer import MLP, load_aesthetic_model_weights
 from ddpo_pytorch.prompts import PromptDataset, imagenet_animal_prompts
 from ddpo_pytorch.utils import PerPromptStatTracker, decoding_fn
-from ddpo_pytorch.trainer import sample_and_calculate_rewards
+from ddpo_pytorch.trainer import sample_and_calculate_rewards, train_one_epoch
 
 torch.backends.cuda.matmal.allow_tf32 = True
 
@@ -144,7 +144,7 @@ def main(args):
         wandb.log({"reward_hist": wandb.Histogram(all_rewards.detach().cpu().numpy())})
 
         # train one epoch
-        
+
        
 
 
