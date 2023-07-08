@@ -2,6 +2,10 @@ import argparse
 import random
 from pathlib import Path 
 
+import torch 
+
+torch.backends.cuda.matmal.allow_tf32 = True
+
 def get_args_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("--model", type=str, help="model name", default="CompVis/stable-diffusion-v1-4")
@@ -29,4 +33,6 @@ def get_args_parser():
 
 if __name__ == "__main__":
     args = get_args_parser()
+
+    
     main(args)
