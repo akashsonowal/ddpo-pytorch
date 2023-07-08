@@ -197,11 +197,12 @@ def main(args):
 
         # model training in a episode
         train_one_episode(
-            args, all_prompts, all_step_preds, log_probs, advantages, pipe, optimizer
+            args, all_prompts, all_step_preds, all_log_probs, all_advantages, pipe, optimizer
         )
 
-        pipe.save_pretrained(args.output_dir)
-        wandb.finish()
+    # save the finetuned model
+    pipe.save_pretrained(args.output_dir)
+    wandb.finish()
 
 
 if __name__ == "__main__":
