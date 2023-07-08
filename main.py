@@ -14,7 +14,7 @@ from ddpo_pytorch.aesthetic_scorer import (
     aesthetic_model_normalize,
 )
 from ddpo_pytorch.prompts import PromptDataset, imagenet_animal_prompts
-from ddpo_pytorch.utils import PerPromptStatTracker, decoding_fn
+from ddpo_pytorch.utils import PerPromptStatTracker
 from ddpo_pytorch.trainer import sample_and_calculate_rewards, train_one_episode
 
 torch.backends.cuda.matmul.allow_tf32 = True
@@ -36,21 +36,19 @@ def get_args_parser():
     parser.add_argument(
         "--num_samples_per_episode", type=int, default=4
     )  # samples per episode 128
-    parser.add_argument("--num_episodes", type=int, default=50) 
-    parser.add_argument(
-        "--sample_episode_batch_size", type=int, default=32
-    )  
-    parser.add_argument("--num_timesteps", type=int, default=50) 
-    parser.add_argument("--num_epochs", type=int, default=1)  
-    parser.add_argument("--batch_size", type=int, default=4) 
+    parser.add_argument("--num_episodes", type=int, default=50)
+    parser.add_argument("--sample_episode_batch_size", type=int, default=32)
+    parser.add_argument("--num_timesteps", type=int, default=50)
+    parser.add_argument("--num_epochs", type=int, default=1)
+    parser.add_argument("--batch_size", type=int, default=4)
     parser.add_argument("--img_size", type=int, default=512)
     parser.add_argument("--lr", type=float, default=5e-6)
     parser.add_argument("--weight_decay", type=float, default=1e-4)
     parser.add_argument("--clip_advantages", type=float, default=10.0)
     parser.add_argument("--clip_ratio", type=float, default=1e-4)
     parser.add_argument("--cfg", type=float, default=5.0)
-    parser.add_argument("--buffer_size", type=int, default=32)  
-    parser.add_argument("--min_count", type=int, default=16) 
+    parser.add_argument("--buffer_size", type=int, default=32)
+    parser.add_argument("--min_count", type=int, default=16)
     parser.add_argument("--wandb_project", type=str, default="DDPO")
     parser.add_argument("--gpu", type=int, default=0)
     parser.add_argument("--output_dir", type=str, default="ddpo_model")
@@ -130,7 +128,7 @@ def main(args):
         aesthetic_model.to("cpu")
         return rewards
 
-    mean_rewards = [] # recording reward per episode during training
+    mean_rewards = []  # recording reward per episode during training
 
     # start training
     for epoch in master_bar(range(args.num_epochs)):
@@ -157,14 +155,14 @@ def main(args):
                 args.img_size,
                 args.cfg,
                 args.num_timesteps,
-                decoding_fn,
                 reward_fn,
                 "cuda",
             )
             batch_advantages = (
                 torch.from_numpy(
                     per_prompt_stat_tracker.update(
-                        np.array(prompts), batch_rewards.squeeze().cpu().detach().numpy()
+                        np.array(prompts),
+                        batch_rewards.squeeze().cpu().detach().numpy(),
                     )
                 )
                 .float()
@@ -197,7 +195,13 @@ def main(args):
 
         # model training in a episode
         train_one_episode(
-            args, all_prompts, all_step_preds, all_log_probs, all_advantages, pipe, optimizer
+            args,
+            all_prompts,
+            all_step_preds,
+            all_log_probs,
+            all_advantages,
+            pipe,
+            optimizer,
         )
 
     # save the RLHF finetuned model
