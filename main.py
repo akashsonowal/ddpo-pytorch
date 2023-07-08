@@ -164,7 +164,7 @@ def main(args):
             batch_advantages = (
                 torch.from_numpy(
                     per_prompt_stat_tracker.update(
-                        np.array(prompts), rewards.squeeze().cpu().detach().numpy()
+                        np.array(prompts), batch_rewards.squeeze().cpu().detach().numpy()
                     )
                 )
                 .float()
