@@ -10,7 +10,7 @@ from fastprogress import progress_bar, master_bar
 import numpy as np
 from PIL import Image
 
-from ddpo_pytorch.aesthetic_scorer import MLP, load_aesthetic_model_weights, aesthetic_scoring
+from ddpo_pytorch.aesthetic_scorer import MLP, load_aesthetic_model_weights, aesthetic_scoring, aesthetic_model_normalize
 from ddpo_pytorch.prompts import PromptDataset, imagenet_animal_prompts
 from ddpo_pytorch.utils import PerPromptStatTracker, decoding_fn
 from ddpo_pytorch.trainer import sample_and_calculate_rewards, train_one_epoch
