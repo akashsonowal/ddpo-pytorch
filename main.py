@@ -102,7 +102,7 @@ def main(args):
     aesthetic_model.cuda()
 
     # setup environment
-    train_set = PromptDataset(imagenet_animal_prompts, args.num_samples_per_epoch)
+    train_set = PromptDataset(imagenet_animal_prompts, args.num_samples_per_episode)
     train_dl = torch.utils.data.DataLoader(
         train_set, batch_size=args.sample_batch_size, shuffle=True, num_workers=0
     )
