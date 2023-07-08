@@ -35,6 +35,18 @@ def get_args_parser():
 def main(args):
     torch.cuda.set_device(args.gpu)
 
+    wandb.init(
+        project=args.wandb_project, 
+        config={
+            "num_samples_per_epoch": args.num_samples_per_epoch,
+            "num_epochs": args.num_epochs,
+            "num_inner_epochs": args.num_inner_epochs,
+            "num_time_steps": args.num_time_steps,
+            "batch_size": args.batch_size,
+            "lr": args.lr
+        }
+    )
+
 if __name__ == "__main__":
     args = get_args_parser()
     main(args)
