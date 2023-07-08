@@ -185,7 +185,7 @@ def main(args):
 
         # train one epoch
         train_one_epoch(
-            args, all_prompts, all_step_preds, log_probs, advantages, optimizer
+            args, all_prompts, all_step_preds, log_probs, advantages, pipe, optimizer
         )
 
         pipe.save_pretrained(args.output_dir)
