@@ -46,7 +46,28 @@ def main(args):
         }
     )
 
-    pipe = Stable
+    pipe = StableDiffusionPipeline.from_pretrained(args.model).to("cuda")
+
+    if args.enable_attention_slicing:
+        pipe.enable_attention_slicing()
+    
+    if args.enable_xformers_memory_efficient_attention:
+        pipe.enable_xformers_memory_efficient_attention()
+    
+    pipe.text_encoder.requires_grad_(False)
+    pipe.vae.requires_grad_(False)
+
+    pipe.scheduler = DDIMScheduler(
+        num_train_timesteps=pipe.scheduler.num_train_timesteps,
+        beta_start=pipe.scheduler.beta_start,
+        beta_end=pipe.scheduler.beta_end,
+        beta_schedule=pipe.scheduler.beta_schedule,
+        trained_betas=pipe.scheduler.trained_betas,
+        clip_sample=pipe.scheduler.clip_sample,
+        set_alpha_to_one=pipe.scheduler.set_alpha_to_one,
+        steps_offset=pipe.scheduler.steps_offset,
+        prediction_type=pipe.scheduler.prediction_type
+    )
 
 if __name__ == "__main__":
     args = get_args_parser()
