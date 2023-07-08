@@ -131,8 +131,8 @@ def main(args):
     mean_rewards = []  # recording reward per episode during training
 
     # start training
-    for epoch in master_bar(range(args.num_epochs)):
-        print(f"Epoch {epoch}")
+    for epoch in master_bar(range(args.num_episodes)):
+        print(f"Episode {episode}")
         all_step_preds, all_log_probs, all_advantages, all_prompts, all_rewards = (
             [],
             [],
