@@ -1,16 +1,18 @@
+import requests
 import argparse
 import wandb
-
-import torch
-from diffusers import StableDiffusionPipeline, DDIMScheduler
-
-import clip
-import requests
-from fastprogress import progress_bar, master_bar
 import numpy as np
 from PIL import Image
-
-from ddpo_pytorch.aesthetic_scorer import MLP, load_aesthetic_model_weights, aesthetic_scoring, aesthetic_model_normalize
+from fastprogress import progress_bar, master_bar
+import torch
+import clip
+from diffusers import StableDiffusionPipeline, DDIMScheduler
+from ddpo_pytorch.aesthetic_scorer import (
+    MLP,
+    load_aesthetic_model_weights,
+    aesthetic_scoring,
+    aesthetic_model_normalize,
+)
 from ddpo_pytorch.prompts import PromptDataset, imagenet_animal_prompts
 from ddpo_pytorch.utils import PerPromptStatTracker, decoding_fn
 from ddpo_pytorch.trainer import sample_and_calculate_rewards, train_one_epoch
@@ -28,20 +30,24 @@ def get_args_parser():
         "--enable_xformers_memory_efficient_attention", action="store_true"
     )
     parser.add_argument("--enable_grad_checkpointing", action="store_true")
-    parser.add_argument("--num_samples_per_epoch", type=int, default=1) # samples per episode 128
-    parser.add_argument("--num_epochs", type=int, default=1) # num_episodes 50
-    parser.add_argument("--num_inner_epochs", type=int, default=1) # epochs
+    parser.add_argument(
+        "--num_samples_per_epoch", type=int, default=1
+    )  # samples per episode 128
+    parser.add_argument("--num_epochs", type=int, default=1)  # num_episodes 50
+    parser.add_argument("--num_inner_epochs", type=int, default=1)  # epochs
     parser.add_argument("--num_timesteps", type=int, default=50)
-    parser.add_argument("--batch_size", type=int, default=1) # batch size 4
-    parser.add_argument("--sample_batch_size", type=int, default=1) # sample batch size 32
+    parser.add_argument("--batch_size", type=int, default=1)  # batch size 4
+    parser.add_argument(
+        "--sample_batch_size", type=int, default=1
+    )  # sample batch size 32
     parser.add_argument("--img_size", type=int, default=512)
     parser.add_argument("--lr", type=float, default=5e-6)
     parser.add_argument("--weight_decay", type=float, default=1e-4)
     parser.add_argument("--clip_advantages", type=float, default=10.0)
     parser.add_argument("--clip_ratio", type=float, default=1e-4)
     parser.add_argument("--cfg", type=float, default=5.0)
-    parser.add_argument("--buffer_size", type=int, default=16) # buffer size 32
-    parser.add_argument("--min_count", type=int, default=8) # min count 16
+    parser.add_argument("--buffer_size", type=int, default=16)  # buffer size 32
+    parser.add_argument("--min_count", type=int, default=8)  # min count 16
     parser.add_argument("--wandb_project", type=str, default="DDPO")
     parser.add_argument("--gpu", type=int, default=0)
     parser.add_argument("--output_dir", type=str, default="ddpo_model")
