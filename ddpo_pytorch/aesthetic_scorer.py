@@ -64,7 +64,7 @@ def aesthetic_scoring(
     )  # (4, 3, 224, 224)
 
     with torch.no_grad():
-        image_features = clip_model.encode(imgs)  # (4, 768)
+        image_features = clip_model.encode_image(imgs)  # (4, 768)
 
     im_emb_arr = aesthetic_model_normalize(
         image_features.cpu().detach().numpy()
