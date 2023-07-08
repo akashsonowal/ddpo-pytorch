@@ -10,7 +10,7 @@ from fastprogress import progress_bar, master_bar
 
 from ddpo_pytorch.aesthetic_scorer import MLP, load_aesthetic_model_weights
 from ddpo_pytorch.prompts import PromptDataset, imagenet_animal_prompts
-from ddpo_pytorch.utils import PerPromptStatTracker
+from ddpo_pytorch.utils import PerPromptStatTracker, decoding_fn
 from ddpo_pytorch.trainer import sample_and_calculate_rewards
 
 torch.backends.cuda.matmal.allow_tf32 = True
@@ -110,15 +110,18 @@ def main(args):
         clip_model.to("cpu")
         aesthetic_model.to("cpu")
         return rewards
-    
-     
-    
+
     mean_rewards = [] 
 
     # start training
     for epoch in master_bar(range(args.num_epochs)):
         print(f"Epoch {epoch}")
         all_step_preds, log_probs, advantages, all_prompts, all_rewards = [], [], [], [], []
+
+        # collect data from environment
+        #  sampling `num_samples_per_epoch` images and calculating rewards
+        for i, prompts in enumerate(progress_bar(train_dl)):
+            batch_imgs, rewards, batch_all_step_preds, batch_log_probs = sample_and_calculate_rewards(prompts, pipe, args.img_size, args.cfg, args.num_timesteps, decoding_fn, reward_fn, 'cuda'))
 
 
 
