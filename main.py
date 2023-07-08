@@ -123,7 +123,7 @@ def main(args):
         # collect data from environment
         #  sampling `num_samples_per_epoch` images and calculating rewards
         for i, prompts in enumerate(progress_bar(train_dl)):
-            batch_imgs, rewards, batch_all_step_preds, batch_log_probs = sample_and_calculate_rewards(prompts, pipe, args.img_size, args.cfg, args.num_timesteps, decoding_fn, reward_fn, 'cuda'))
+            batch_imgs, rewards, batch_all_step_preds, batch_log_probs = sample_and_calculate_rewards(prompts, pipe, args.img_size, args.cfg, args.num_timesteps, decoding_fn, reward_fn, 'cuda')
             batch_advantages = torch.from_numpy(per_prompt_stat_tracker.update(np.array(prompts), rewards.squeeze().cpu().detach().numpy())).float().to('cuda')
             wandb.log({"img batch": [wandb.Image(Image.fromarray(img), caption=prompt) for img, prompt in zip(batch_imgs, prompts)]})
 
