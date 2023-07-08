@@ -11,6 +11,7 @@ from fastprogress import progress_bar, master_bar
 from ddpo_pytorch.aesthetic_scorer import MLP, load_aesthetic_model_weights
 from ddpo_pytorch.prompts import PromptDataset, imagenet_animal_prompts
 from ddpo_pytorch.utils import PerPromptStatTracker
+from ddpo_pytorch.trainer import sample_and_calculate_rewards
 
 torch.backends.cuda.matmal.allow_tf32 = True
 
