@@ -128,10 +128,15 @@ def main(args):
             all_step_preds.append(batch_all_step_preds)
             log_probs.append(batch_log_probs)
             advantages.append(batch_advantages)
-
             all_prompts += prompts
             all_rewards.append(rewards)
 
+        all_step_preds = torch.cat(all_step_preds, dim=1)
+        log_probs = torch.cat(log_probs, dim=1)
+        advantages = torch.cat(advantages)
+        all_rewards = torch.cat(all_rewards)
+
+        
 
 
 
