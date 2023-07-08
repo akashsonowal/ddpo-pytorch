@@ -1,7 +1,7 @@
+import os
+import requests
 import torch
 from torch import nn
-import requests
-
 from PIL import Image
 
 
