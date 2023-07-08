@@ -9,6 +9,7 @@ import requests
 
 from ddpo_pytorch.aesthetic_scorer import MLP, load_aesthetic_model_weights
 from ddpo_pytorch.prompts import PromptDataset, imagenet_animal_prompts
+from ddpo_pytorch.utils import PerPromptStatTracker
 
 torch.backends.cuda.matmal.allow_tf32 = True
 
@@ -63,6 +64,9 @@ def main(args):
     pipe.text_encoder.requires_grad_(False)
     pipe.vae.requires_grad_(False)
 
+    if args.enable_grad_checkpointing: 
+        pipe.unet.enable_gradient_checkpointing() # more performance optimization
+
     pipe.scheduler = DDIMScheduler(
         num_train_timesteps=pipe.scheduler.num_train_timesteps,
         beta_start=pipe.scheduler.beta_start,
@@ -92,6 +96,8 @@ def main(args):
     train_set = PromptDataset(imagenet_animal_prompts, args.num_samples_per_epoch)
     train_dl = torch.utils.data.DataLoader(train_set, batch_size=args.sample_batch_size, shuffle=True, num_workers=0)
 
+    optimizer = torch.optim.AdamW(pipe.unet.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+    per_prompt_stat_tracker = PerPromptStatTracker(args.buffer_size, args.min_count)
   
     def reward_fn(imgs, device):
         clip_model.to(device)
