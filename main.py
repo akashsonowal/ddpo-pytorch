@@ -112,7 +112,7 @@ def main(args):
     }
     imagenet_classes = list(synsets.values())  # total 1000 classes
 
-    train_set = PromptDataset(imagenet_animal_prompts, args.num_samples_per_epoch)
+    train_set = PromptDataset(imagenet_animal_prompts(imagenet_classes), args.num_samples_per_epoch)
     train_dl = torch.utils.data.DataLoader(
         train_set, batch_size=args.sample_batch_size, shuffle=True, num_workers=0
     )
