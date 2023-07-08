@@ -23,7 +23,10 @@ torch.backends.cuda.matmul.allow_tf32 = True
 def get_args_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "--sd_model", type=str, help="model name", default="CompVis/stable-diffusion-v1-4"
+        "--sd_model",
+        type=str,
+        help="model name",
+        default="CompVis/stable-diffusion-v1-4",
     )
     parser.add_argument("--enable_attention_slicing", action="store_true")
     parser.add_argument(
@@ -104,7 +107,10 @@ def main(args):
     # setup environment
     train_set = PromptDataset(imagenet_animal_prompts, args.num_samples_per_episode)
     train_dl = torch.utils.data.DataLoader(
-        train_set, batch_size=args.sample_episode_batch_size, shuffle=True, num_workers=0
+        train_set,
+        batch_size=args.sample_episode_batch_size,
+        shuffle=True,
+        num_workers=0,
     )
 
     optimizer = torch.optim.AdamW(
@@ -127,9 +133,9 @@ def main(args):
     mean_rewards = []
 
     # start training
-    for epoch in master_bar(range(args.num_epochs)):
-        print(f"Epoch {epoch}")
-        all_step_preds, log_probs, advantages, all_prompts, all_rewards = (
+    for episode in master_bar(range(args.num_episodes)):
+        print(f"Episode {episode}")
+        all_step_preds, all_log_probs, all_advantages, all_prompts, all_rewards = (
             [],
             [],
             [],
@@ -138,11 +144,11 @@ def main(args):
         )
 
         # collect data from environment
-        #  sampling `num_samples_per_epoch` images and calculating rewards
+        #  sampling `num_samples_per_episode` images and calculating rewards
         for i, prompts in enumerate(progress_bar(train_dl)):
             (
                 batch_imgs,
-                rewards,
+                batch_rewards,
                 batch_all_step_preds,
                 batch_log_probs,
             ) = sample_and_calculate_rewards(
