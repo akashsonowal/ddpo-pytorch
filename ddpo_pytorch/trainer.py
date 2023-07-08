@@ -22,8 +22,8 @@ def train_one_episode(args, all_prompts, all_step_preds, all_log_probs, all_adva
 
         # chunk them into batches
         all_step_preds_chunked = torch.chunk(all_step_preds, args.num_samples_per_episode // args.batch_size, dim=1)
-        log_probs_chunked = torch.chunk(log_probs, args.num_samples_per_epoch // args.batch_size, dim=1)
-        advantages_chunked = torch.chunk(advantages, args.num_samples_per_epoch // args.batch_size, dim=0)
+        log_probs_chunked = torch.chunk(all_log_probs, args.num_samples_per_episode // args.batch_size, dim=1)
+        advantages_chunked = torch.chunk(all_advantages, args.num_samples_per_episode // args.batch_size, dim=0)
         
         # chunk the prompts (list of strings) into batches
         all_prompts_chunked = [all_prompts[i:i + args.batch_size] for i in range(0, len(all_prompts), args.batch_size)]
