@@ -6,15 +6,6 @@ from fastprogress import progress_bar
 from .ppo import compute_loss
 from .utils import sd_sample
 
-def sample_and_calculate_rewards(prompts, pipe, image_size, cfg, num_timesteps, decoding_fn, reward_fn, device):
-    """
-    for a batch
-    """
-    preds, all_step_preds, log_probs = sd_sample(prompts, pipe, image_size, image_size, cfg, num_timesteps, 1, device)
-    imgs = decoding_fn(preds, pipe)    
-    rewards = reward_fn(imgs, device)
-    return imgs, rewards, all_step_preds, log_probs
-
 def train_one_episode(args, all_prompts, all_step_preds, all_log_probs, all_advantages, pipe, optimizer):
 
     for epoch in progress_bar(range(args.num_epochs)):
