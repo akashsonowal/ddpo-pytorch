@@ -104,7 +104,7 @@ def main(args):
     # setup environment
     train_set = PromptDataset(imagenet_animal_prompts, args.num_samples_per_episode)
     train_dl = torch.utils.data.DataLoader(
-        train_set, batch_size=args.sample_batch_size, shuffle=True, num_workers=0
+        train_set, batch_size=args.sample_episode_batch_size, shuffle=True, num_workers=0
     )
 
     optimizer = torch.optim.AdamW(
