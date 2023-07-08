@@ -133,8 +133,8 @@ def main(args):
     mean_rewards = []
 
     # start training
-    for episode in master_bar(range(args.num_episodes)):
-        print(f"Episode {episode}")
+    for epoch in master_bar(range(args.num_epochs)):
+        print(f"Epoch {epoch}")
         all_step_preds, all_log_probs, all_advantages, all_prompts, all_rewards = (
             [],
             [],
@@ -180,10 +180,10 @@ def main(args):
             )
 
             all_step_preds.append(batch_all_step_preds)
-            log_probs.append(batch_log_probs)
-            advantages.append(batch_advantages)
+            all_log_probs.append(batch_log_probs)
+            all_advantages.append(batch_advantages)
             all_prompts += prompts
-            all_rewards.append(rewards)
+            all_rewards.append(batch_rewards)
 
         all_step_preds = torch.cat(all_step_preds, dim=1)
         log_probs = torch.cat(log_probs, dim=1)
