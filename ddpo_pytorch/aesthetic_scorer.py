@@ -32,10 +32,10 @@ def load_aesthetic_model_weights(cache="."):
     loadpath = os.path.join(cache, weights_fname)
 
     if not os.path.exists(loadpath):
-        url = {
+        url = (
             "https://github.com/christophschuhmann/"
             f"improved-aesthetic-predictor/blob/main/{weights_fname}?raw=true"
-        }
+        )
         r = requests.get(url)
 
         with open(loadpath, "wb") as f:
