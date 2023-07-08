@@ -15,7 +15,7 @@ def sample_and_calculate_rewards(prompts, pipe, image_size, cfg, num_timesteps, 
     rewards = reward_fn(imgs, device)
     return imgs, rewards, all_step_preds, log_probs
 
-def train_one_epoch(args, all_prompts, all_step_preds, log_probs, advantages, optimizer):
+def train_one_epoch(args, all_prompts, all_step_preds, log_probs, advantages, pipe, optimizer):
 
     for inner_epoch in progress_bar(range(args.num_inner_epochs)):
         print(f'Inner epoch {inner_epoch}')
