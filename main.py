@@ -1,10 +1,10 @@
-import argparse 
+import argparse
 import wandb
 
-import torch 
+import torch
 from diffusers import StableDiffusionPipeline, DDIMScheduler
 
-import clip 
+import clip
 import requests
 from fastprogress import progress_bar, master_bar
 import numpy as np
@@ -17,11 +17,16 @@ from ddpo_pytorch.trainer import sample_and_calculate_rewards, train_one_epoch
 
 torch.backends.cuda.matmul.allow_tf32 = True
 
+
 def get_args_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model", type=str, help="model name", default="CompVis/stable-diffusion-v1-4")
+    parser.add_argument(
+        "--model", type=str, help="model name", default="CompVis/stable-diffusion-v1-4"
+    )
     parser.add_argument("--enable_attention_slicing", action="store_true")
-    parser.add_argument("--enable_xformers_memory_efficient_attention", action="store_true")
+    parser.add_argument(
+        "--enable_xformers_memory_efficient_attention", action="store_true"
+    )
     parser.add_argument("--enable_grad_checkpointing", action="store_true")
     parser.add_argument("--num_samples_per_epoch", type=int, default=128)
     parser.add_argument("--num_epochs", type=int, default=50)
@@ -42,34 +47,35 @@ def get_args_parser():
     parser.add_argument("--output_dir", type=str, default="ddpo_model")
     return parser.parse_args()
 
+
 def main(args):
     torch.cuda.set_device(args.gpu)
 
     wandb.init(
-        project=args.wandb_project, 
+        project=args.wandb_project,
         config={
             "num_samples_per_epoch": args.num_samples_per_epoch,
             "num_epochs": args.num_epochs,
             "num_inner_epochs": args.num_inner_epochs,
             "num_time_steps": args.num_timesteps,
             "batch_size": args.batch_size,
-            "lr": args.lr
-        }
+            "lr": args.lr,
+        },
     )
 
     pipe = StableDiffusionPipeline.from_pretrained(args.model).to("cuda")
 
     if args.enable_attention_slicing:
         pipe.enable_attention_slicing()
-    
+
     if args.enable_xformers_memory_efficient_attention:
         pipe.enable_xformers_memory_efficient_attention()
-    
+
     pipe.text_encoder.requires_grad_(False)
     pipe.vae.requires_grad_(False)
 
-    if args.enable_grad_checkpointing: 
-        pipe.unet.enable_gradient_checkpointing() # more performance optimization
+    if args.enable_grad_checkpointing:
+        pipe.unet.enable_gradient_checkpointing()  # more performance optimization
 
     pipe.scheduler = DDIMScheduler(
         num_train_timesteps=pipe.scheduler.num_train_timesteps,
@@ -80,7 +86,7 @@ def main(args):
         clip_sample=pipe.scheduler.clip_sample,
         set_alpha_to_one=pipe.scheduler.set_alpha_to_one,
         steps_offset=pipe.scheduler.steps_offset,
-        prediction_type=pipe.scheduler.prediction_type
+        prediction_type=pipe.scheduler.prediction_type,
     )
 
     # setup reward model
@@ -90,42 +96,91 @@ def main(args):
     aesthetic_model.cuda()
 
     # setup environment
-    r = requests.get("https://raw.githubusercontent.com/formigone/tf-imagenet/master/LOC_synset_mapping.txt")
-    with open("LOC_synset_mapping.txt", "wb") as f: 
+    r = requests.get(
+        "https://raw.githubusercontent.com/formigone/tf-imagenet/master/LOC_synset_mapping.txt"
+    )
+    with open("LOC_synset_mapping.txt", "wb") as f:
         f.write(r.content)
-    
-    synsets = {k:v for k,v in [o.split(',')[0].split(' ', maxsplit=1) for o in Path('LOC_synset_mapping.txt').read_text().splitlines()]}
-    imagenet_classes = list(synsets.values()) # total 1000 classes
+
+    synsets = {
+        k: v
+        for k, v in [
+            o.split(",")[0].split(" ", maxsplit=1)
+            for o in Path("LOC_synset_mapping.txt").read_text().splitlines()
+        ]
+    }
+    imagenet_classes = list(synsets.values())  # total 1000 classes
 
     train_set = PromptDataset(imagenet_animal_prompts, args.num_samples_per_epoch)
-    train_dl = torch.utils.data.DataLoader(train_set, batch_size=args.sample_batch_size, shuffle=True, num_workers=0)
+    train_dl = torch.utils.data.DataLoader(
+        train_set, batch_size=args.sample_batch_size, shuffle=True, num_workers=0
+    )
 
-    optimizer = torch.optim.AdamW(pipe.unet.parameters(), lr=args.lr, weight_decay=args.weight_decay)
+    optimizer = torch.optim.AdamW(
+        pipe.unet.parameters(), lr=args.lr, weight_decay=args.weight_decay
+    )
     per_prompt_stat_tracker = PerPromptStatTracker(args.buffer_size, args.min_count)
-  
+
     def reward_fn(imgs, device):
         clip_model.to(device)
         aesthetic_model.to(device)
 
-        rewards = aesthetic_scoring(imgs, preprocess, clip_model, aesthetic_model_normalize, aesthetic_model)
+        rewards = aesthetic_scoring(
+            imgs, preprocess, clip_model, aesthetic_model_normalize, aesthetic_model
+        )
 
         clip_model.to("cpu")
         aesthetic_model.to("cpu")
         return rewards
 
-    mean_rewards = [] 
+    mean_rewards = []
 
     # start training
     for epoch in master_bar(range(args.num_epochs)):
         print(f"Epoch {epoch}")
-        all_step_preds, log_probs, advantages, all_prompts, all_rewards = [], [], [], [], []
+        all_step_preds, log_probs, advantages, all_prompts, all_rewards = (
+            [],
+            [],
+            [],
+            [],
+            [],
+        )
 
         # collect data from environment
         #  sampling `num_samples_per_epoch` images and calculating rewards
         for i, prompts in enumerate(progress_bar(train_dl)):
-            batch_imgs, rewards, batch_all_step_preds, batch_log_probs = sample_and_calculate_rewards(prompts, pipe, args.img_size, args.cfg, args.num_timesteps, decoding_fn, reward_fn, 'cuda')
-            batch_advantages = torch.from_numpy(per_prompt_stat_tracker.update(np.array(prompts), rewards.squeeze().cpu().detach().numpy())).float().to('cuda')
-            wandb.log({"img batch": [wandb.Image(Image.fromarray(img), caption=prompt) for img, prompt in zip(batch_imgs, prompts)]})
+            (
+                batch_imgs,
+                rewards,
+                batch_all_step_preds,
+                batch_log_probs,
+            ) = sample_and_calculate_rewards(
+                prompts,
+                pipe,
+                args.img_size,
+                args.cfg,
+                args.num_timesteps,
+                decoding_fn,
+                reward_fn,
+                "cuda",
+            )
+            batch_advantages = (
+                torch.from_numpy(
+                    per_prompt_stat_tracker.update(
+                        np.array(prompts), rewards.squeeze().cpu().detach().numpy()
+                    )
+                )
+                .float()
+                .to("cuda")
+            )
+            wandb.log(
+                {
+                    "img batch": [
+                        wandb.Image(Image.fromarray(img), caption=prompt)
+                        for img, prompt in zip(batch_imgs, prompts)
+                    ]
+                }
+            )
 
             all_step_preds.append(batch_all_step_preds)
             log_probs.append(batch_log_probs)
@@ -144,10 +199,13 @@ def main(args):
         wandb.log({"reward_hist": wandb.Histogram(all_rewards.detach().cpu().numpy())})
 
         # train one epoch
-        train_one_epoch(args, all_prompts, all_step_preds, log_probs, advantages, optimizer)
-        
+        train_one_epoch(
+            args, all_prompts, all_step_preds, log_probs, advantages, optimizer
+        )
+
         pipe.save_pretrained(args.output_dir)
         wandb.finish()
+
 
 if __name__ == "__main__":
     args = get_args_parser()
