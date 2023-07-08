@@ -1,6 +1,7 @@
 
 import wandb
 import torch 
+from fastprogress import progress_bar
 
 from .ppo import compute_loss
 from .utils import sd_sample
