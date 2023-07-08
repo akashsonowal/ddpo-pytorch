@@ -136,7 +136,9 @@ def main(args):
         advantages = torch.cat(advantages)
         all_rewards = torch.cat(all_rewards)
 
-        
+        mean_rewards.append(all_rewards.mean().item())
+
+
 
 
 
