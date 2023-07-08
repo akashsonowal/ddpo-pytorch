@@ -6,6 +6,7 @@ from PIL import Image
 
 class MLP(nn.Module):
     def __init__(self, input_size):
+        super(MLP).__init__()
         self.input_size = input_size
         self.layers = nn.Sequential(
             nn.Linear(self.input_size, 1024),
