@@ -186,8 +186,8 @@ def main(args):
             all_rewards.append(batch_rewards)
 
         all_step_preds = torch.cat(all_step_preds, dim=1)
-        log_probs = torch.cat(log_probs, dim=1)
-        advantages = torch.cat(advantages)
+        all_log_probs = torch.cat(all_log_probs, dim=1)
+        all_advantages = torch.cat(all_advantages)
         all_rewards = torch.cat(all_rewards)
 
         mean_rewards.append(all_rewards.mean().item())
