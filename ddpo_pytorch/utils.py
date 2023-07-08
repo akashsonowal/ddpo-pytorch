@@ -1,5 +1,6 @@
 import math 
 import torch 
+from fastprogress import progress_bar
 
 def calculate_log_probs(prev_sample, prev_sample_mean, std_dev_t):
     std_dev_t = torch.clip(std_dev_t, 1e-6)
