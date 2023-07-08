@@ -13,7 +13,7 @@ class PromptDataset(torch.utils.data.Dataset):
     def __getitem__(self, x): 
         return self.prompt_fn()
 
-def imagent_animal_prompts():
+def imagenet_animal_prompts():
     animal = random.choice(imagenet_classes[:397])
     prompts = f"{animal}"
     return prompts
