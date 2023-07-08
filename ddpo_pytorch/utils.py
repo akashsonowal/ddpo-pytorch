@@ -112,7 +112,7 @@ def decoding_fn(latents, pipe):
 
 
 def sample_and_calculate_rewards(
-    prompts, pipe, image_size, cfg, num_timesteps, decoding_fn, reward_fn, device
+    prompts, pipe, image_size, cfg, num_timesteps, reward_fn, device
 ):
     """
     for a batch
