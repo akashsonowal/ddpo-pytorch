@@ -1,9 +1,8 @@
 import argparse 
 import wandb
-import random
-from pathlib import Path 
 
 import torch 
+from diffusers import StableDiffusionPipeline, DDIMScheduler
 
 torch.backends.cuda.matmal.allow_tf32 = True
 
@@ -46,6 +45,8 @@ def main(args):
             "lr": args.lr
         }
     )
+
+    pipe = Stable
 
 if __name__ == "__main__":
     args = get_args_parser()
