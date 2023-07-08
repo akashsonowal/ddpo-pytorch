@@ -130,7 +130,7 @@ def main(args):
         aesthetic_model.to("cpu")
         return rewards
 
-    mean_rewards = [] # recording reward per episode
+    mean_rewards = [] # recording reward per episode during training
 
     # start training
     for epoch in master_bar(range(args.num_epochs)):
