@@ -47,6 +47,10 @@ def compute_loss(x_t, original_log_probs, advantages, clip_advantages, clip_rati
         clipped_loss = -clipped_advantages * torch.clip(ratio, 1. - clip_ratio, 1. + clip_ratio) # this is the surrogate loss, but with artificially clipped ratios
 
         loss = torch.max(unclipped_loss, clipped_loss).mean() # we take the max of the clipped and unclipped surrogate losses, and take the mean over the batch
+        
+        if not torch.isfinite(loss):
+            raise RuntimeError("Encountered non-finite loss during computation.")
+
         loss.backward() 
 
         loss_value += loss.item()
