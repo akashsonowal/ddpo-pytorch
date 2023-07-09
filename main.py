@@ -14,8 +14,8 @@ from ddpo_pytorch.aesthetic_scorer import (
     aesthetic_model_normalize,
 )
 from ddpo_pytorch.prompts import PromptDataset, imagenet_animal_prompts
-from ddpo_pytorch.utils import PerPromptStatTracker
-from ddpo_pytorch.trainer import sample_and_calculate_rewards, train_one_episode
+from ddpo_pytorch.utils import PerPromptStatTracker, sample_and_calculate_rewards
+from ddpo_pytorch.trainer import train_one_episode
 
 torch.backends.cuda.matmul.allow_tf32 = True
 
